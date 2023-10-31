@@ -1,0 +1,50 @@
+#全局配置
+global:
+  namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+#  env_name: test   #环境名称，非正式环境下多环境的名称
+#服务端配置 
+server:
+  app: trpc_java #业务的应用名
+  server: trpc_java_demo #业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  #  jvm_params: -Xms1024m  -Xmx1024m  -Xmn512m  -XX:+UseG1GC  #配置jvm相关参数
+  jvm_params: -Xms1024m -Xmx1024m -Xmn512m
+  service:
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisHTTP
+      impls:
+        - com.tencent.trpc.demo.http.service.HelloServiceImpl
+      port: 8084
+      protocol: http
+      transporter: jetty
+      serialization: json
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8084 -protocol http -body '{"msg":"hello,trpc-cli"}'
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+      impls:
+        - com.tencent.trpc.demo.http.service.HelloServiceImpl
+      port: 8085
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8085 -protocol trpc -body '{"msg":"hello,trpc-cli"}'
+    - name: trpc.trpc_java.trpc_java_demo.springmvc
+      impls:
+        - com.tencent.trpc.demo.http.service.HelloServiceImpl
+      port: 8083
+      protocol: rest
+      serialization: json
+      base_path: /test
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8083 -protocol http -body '{"msg":"hello,trpc-cli"}'
+#  filters:
+#    - polaris_limiter
+client:
+  service:
+    - name: testPolarisClient   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8084
+      protocol: http
+      serialization: json
+    - name: testHttp   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8083
+      protocol: http
+      serialization: json

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: helloworld
+  rainbow:
+    refreshScope: false
+server:
+  port: 8191

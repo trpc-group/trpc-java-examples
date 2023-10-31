@@ -1,0 +1,78 @@
+#全局配置
+global:
+  namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+  env_name: 0f9552d0   #环境名称，非正式环境下多环境的名称
+#服务端配置
+server:
+  app: trpc_java #业务的应用名
+  server: trpc_java_demo #业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  jvm_params: -Xms3096m  -Xmx3096m  -Xmn2048m  -XX:+UseG1GC  #配置jvm相关参数
+  worker_pool: worker_pool_provider_fiber
+  service:
+    - name: trpc.trpc_java.trpc_java_demo.HelloHTTP
+      impls:
+        - com.tencent.trpc.demo.coroutine.service.HelloServiceImpl
+      port: 8182
+      protocol: http
+      transporter: jetty
+      serialization: json
+    - name: trpc.trpc_java.trpc_java_demo.HelloTRPC
+      impls:
+        - com.tencent.trpc.demo.coroutine.service.HelloServiceImpl
+      port: 8183
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+client:
+  worker_pool: worker_pool_consumer_fiber
+  service:
+    - name: testHttpClient   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8182
+      protocol: http
+      transporter: jetty
+      serialization: json
+    - name: testTrpcClient   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8183
+      protocol: trpc
+      serialization: pb
+plugins:
+  worker_pool: # 线程池插件类型
+    worker_pool_consumer_fiber: # 客户端线程池名称
+      _type: thread
+      core_pool_size: 10000 # 协程池核心数量  默认100
+      maximum_pool_size: 100000 # 协程池最大数量 默认5000
+      keep_alive_time_seconds: 60 # 超过核心线程线程最长空闲时间 默认60s
+      queue_size: 5000 # 队列长度 默认5000，如果设置成0会使用无界队列LinkedTransferQueue 性能更好，但有OOM风险，OOM取决你的请求速率和是否会产生堆积，不堆积不会OOM
+      allow_core_thread_timeout: true #是否超时回收核心线程 默认为true 为true时线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+      deamon: true #是否后台线程
+      use_fiber: true
+      close_timeout: 10000 # 优雅关闭线程池 超时关闭时间 10000ms
+      fiber_parallel: 2 # 默认CPU核心数 协程的调度线程池并行度级别
+      share_schedule: true # 协程池是否共享调度器 默认true 如果是false就单独创建一个线程池调度器
+    worker_pool_provider_fiber:
+      _type: thread
+      core_pool_size: 10000 # 默认100 默认的协程池核心数量
+      maximum_pool_size: 100000 # 默认的协程池最大数量 5000
+      keep_alive_time_seconds: 60 # 超过核心线程线程最长空闲时间 默认60s
+      queue_size: 5000 # 队列长度 默认5000，如果设置成0会使用无界队列LinkedTransferQueue 性能更好，但有OOM风险，OOM取决你的请求速率和是否会产生堆积，不堆积不会OOM
+      allow_core_thread_timeout: true #是否超时回收核心线程 默认为true 为true时线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+      deamon: true #是否后台线程
+      use_fiber: true
+      close_timeout: 10000 # 优雅关闭线程池 超时关闭时间 10000ms
+      fiber_parallel: 2 # 默认CPU核心数 协程的调度线程池并行度级别
+      share_schedule: true # 协程池是否共享调度器 默认true 如果是false就单独创建一个线程池调度器
+    worker_pool_naming_fiber:
+      _type: thread
+      core_pool_size: 10000 # 默认100 默认的协程池核心数量
+      maximum_pool_size: 100000 # 默认的协程池最大数量 5000
+      keep_alive_time_seconds: 60 # 超过核心线程线程最长空闲时间 默认60s
+      queue_size: 5000 # 队列长度 默认5000，如果设置成0会使用无界队列LinkedTransferQueue 性能更好，但有OOM风险，OOM取决你的请求速率和是否会产生堆积，不堆积不会OOM
+      allow_core_thread_timeout: true #是否超时回收核心线程 默认为true 为true时线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+      deamon: true #是否后台线程
+      use_fiber: true
+      close_timeout: 10000 # 优雅关闭线程池 超时关闭时间 10000ms
+      fiber_parallel: 2 # 默认CPU核心数 协程的调度线程池并行度级别
+      share_schedule: true # 协程池是否共享调度器 默认true 如果是false就单独创建一个线程池调度器

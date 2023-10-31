@@ -1,0 +1,55 @@
+#全局配置
+global:
+  namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+  env_name: 0f9552d0   #环境名称，非正式环境下多环境的名称
+#服务端配置 
+server:
+  app: test #业务的应用名
+  server: helloworld #业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  jvm_params: -Xms1024m  -Xmx1024m  -Xmn512m  -XX:+UseG1GC  #配置jvm相关参数
+  service:
+    - name: trpc.test.helloworld.HelloPolaris
+      impls:
+        - com.tencent.trpc.examples.polaris.service.HelloServiceImpl
+      port: 8082
+      protocol: http
+      transporter: jetty
+      serialization: json
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8082 -protocol http -body '{"msg":"hello,trpc-cli"}'
+    - name: trpc.test.helloworld.HelloPolarisTrpc
+      impls:
+        - com.tencent.trpc.examples.polaris.service.HelloServiceImpl
+      port: 8083
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8083 -protocol trpc -body '{"msg":"hello,trpc-cli"}'
+plugins:
+  registry:
+    polaris: #名字注册服务的远程对象
+      heartbeat_interval: 3000 #名字注册服务心跳上报间隔
+      mode: 0                                      #选填，运行模式0-noagent 1-withagent
+      protocol: grpc                               #选填，服务发现的rpc协议，暂时只支持grpc
+      register_self: true
+      service:
+        - name: trpc.test.helloworld.HelloPolaris
+          namespace: Development #环境类型，分正式production和非正式development两种类型
+        - name: trpc.test.helloworld.HelloPolarisTrpc
+          namespace: Development #环境类型，分正式production和非正式development两种类型
+      # 以下的配置与polaris java sdk配置一致。
+      global:
+        system:
+          discoverCluster:
+            sameAsBuiltin: true
+          healthCheckCluster:
+            sameAsBuiltin: true
+        serverConnector:
+          # target server address
+          addresses:
+            - 127.0.0.1:8091
+        statReporter:
+          enable: true
+          plugin:
+            prometheus:
+              port: 28082

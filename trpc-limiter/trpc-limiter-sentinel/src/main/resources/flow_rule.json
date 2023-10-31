@@ -1,0 +1,11 @@
+[
+  {
+    "resource": "/trpc.test.demo.Hello/SayHello",
+    "controlBehavior": 1,
+    "count": 3,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "timeWindow": 2
+  }
+]

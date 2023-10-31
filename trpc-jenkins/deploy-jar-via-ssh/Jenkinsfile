@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment {
+        CI_JOB_NAME = 'ci-demo' // 获取这个Jenkins job的归档jar
+        JAR_NAME = 'trpc-java-demos-1.0.0-SNAPSHOT.jar' // 归档jar文件名
+        DEST_PATH = '/data/home/dist/' // 推送jar至远程主机的哪个目录
+        TARGETS = 'host1,host2' // 要执行部署的远程主机列表，逗号分隔
+        USERNAME = 'jenkins' // SSH远程主机使用的用户名
+        SSH_CREDENTIAL_ID = 'remote_server_ssh' // SSH远程主机使用的Jenkins秘钥ID
+        DEPLOY_CMD = 'sh /data/home/dist/deploy.sh' // jar制品推送后，在远程主机上执行的部署脚本（即服务重启脚本）
+    }
+    parameters {
+        // 指定使用特定build number的归档制品，留空则使用最近一次stable build
+        string(name: 'BUILD_NO', defaultValue: '', description: 'use artifact of specific build, leave it empty to use latest stable build')
+    }
+    stages {
+        stage('Prepare') {
+            // 准备阶段：获取制品文件，打印必要信息
+            steps {
+                script {
+                    if ("${params.BUILD_NO}" != '') {
+                        echo "use artifact ${JAR_NAME} from build #${params.BUILD_NO} of ${CI_JOB_NAME}"
+                        copyArtifacts projectName: env.CI_JOB_NAME, selector: specific("${params.BUILD_NO}"), filter: "**/${JAR_NAME}", fingerprintArtifacts: true, flatten: true
+                    } else {
+                        echo "use artifact ${JAR_NAME} from latest stable build of ${CI_JOB_NAME}"
+                        copyArtifacts projectName: env.CI_JOB_NAME, filter: "**/${JAR_NAME}", fingerprintArtifacts: true, flatten: true
+                    }
+                    echo "artifact will be deploy to: \n" + "${TARGETS}".replaceAll(',', '\n')
+                }
+            }
+        }
+        stage('Push to remote') {
+            // 推送阶段：通过scp命令将制品文件推送至远程主机
+            steps {
+                script {
+                    def targets = env.TARGETS.split(',')
+                    for (target in targets) {
+                        echo "pushing artifact to " + target
+                        sshagent([env.SSH_CREDENTIAL_ID]) {
+                            sh "scp -r -P 36000 ${JAR_NAME} ${USERNAME}@" + target + ":${DEST_PATH}"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            // 部署阶段：ssh远程主机执行部署命令
+            steps {
+                script {
+                    def targets = env.TARGETS.split(',')
+                    for (target in targets) {
+                        echo "deploying service on " + target
+                        sshagent([env.SSH_CREDENTIAL_ID]) {
+                            sh "ssh -p 36000 ${USERNAME}@" + target + " '${DEPLOY_CMD}'"
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+#客户端配置
+client:
+  #访问trpc服务配置
+  service:
+    - name: trpc.test.demo.Hello # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8090 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHello # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8090

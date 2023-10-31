@@ -1,0 +1,52 @@
+#全局配置
+global:
+  namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+#  env_name: test   #环境名称，非正式环境下多环境的名称
+#服务端配置 
+server:
+  app: trpc_java #业务的应用名
+  server: trpc_java_demo #业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  jvm_params: -Xms1024m  -Xmx1024m  -Xmn512m
+  service:
+    - name: com.tencent.trpc.demo.api.HelloAPI
+      impls:
+        - com.tencent.trpc.demo.selector.zookeeper.service.HelloServiceImpl
+      ip: 127.0.0.1
+      port: 8084
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      io_threads: 8
+      registrys:
+        zookeeper:
+          registry_type: provider
+client:
+  service:
+    - name: com.tencent.trpc.demo.api.HelloAPI
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: zookeeper://com.tencent.trpc.demo.api.HelloAPI
+plugins:
+  registry: # 申明服务注册
+    zookeeper: # zk注册中心配置
+      addresses: 127.0.0.1:12181,127.0.0.1:12181        # zookeeper集群地址
+      #      username: zookeeper                         # 用户名
+      #      password: zk1234                            # 密码
+      retry_period: 5000                          # 服务注册/订阅失败时的重试间隔，默认5s
+      retry_times: 3                              # 服务注册/订阅失败时的重试次数，默认3s
+      namespace: /trpc
+  selector: # 申明服务发现
+    zookeeper:
+      addresses: 127.0.0.1:12181,127.0.0.1:12181        # zookeeper集群地址
+      #      username: zookeeper                         # 用户名
+      #      password: zk1234                            # 密码
+      persisted_save_cache: true                  # 开启缓存数据持久化，默认不开启
+      synced_save_cache: true                     # 缓存持久化方式，默认异步
+      #cache_file_path: ./tmp/zk.cache            # 持久化文件路径，默认：{用户目录}/.trpc/trpc-registry/zookeeper.cache
+      cache_expire_time: 3600                     # 缓存的过期时间，默认3600s。即注册中心不可用时，本地缓存在3600s后失效
+      retry_period: 5000                          # 服务注册/订阅失败时的重试间隔，默认5s
+      retry_times: 3                              # 服务注册/订阅失败时的重试次数，默认3s
+      namespace: /trpc                            # 服务的命名空间，默认为trpc

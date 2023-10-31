@@ -1,0 +1,1 @@
+limiter_polaris=com.tencent.trpc.demos.limiter.polaris.limiter.PolarisLimiter

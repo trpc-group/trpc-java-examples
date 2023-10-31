@@ -1,0 +1,51 @@
+#全局配置
+global:
+  namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+#  env_name: test   #环境名称，非正式环境下多环境的名称
+#服务端配置 
+server:
+  app: trpc_java #业务的应用名
+  server: trpc_java_demo #业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  #  jvm_params: -Xms1024m  -Xmx1024m  -Xmn512m  -XX:+UseG1GC  #配置jvm相关参数
+  jvm_params: -Xms1024m  -Xmx1024m  -Xmn512m
+  service:
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisHTTP
+      impls:
+        - com.tencent.trpc.demo.polaris.service.HelloServiceImpl
+      port: 8084
+      protocol: http
+      transporter: jetty
+      serialization: pb
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8084 -protocol http -body '{"msg":"hello,trpc-cli"}'
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+      impls:
+        - com.tencent.trpc.demo.polaris.service.HelloServiceImpl
+      port: 8085
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8085 -protocol trpc -body '{"msg":"hello,trpc-cli"}'
+    - name: trpc.trpc_java.trpc_java_demo.Async
+      impls:
+        - com.tencent.trpc.demo.polaris.service.AsyncServiceImpl
+      port: 8086
+      protocol: trpc
+      transporter: netty
+      serialization: pb
+      idle_timeout: 86400000 # 单位为毫秒, 默认为 180000
+      # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8086 -protocol trpc -body '{"msg":"hello,trpc-cli"}'
+client:
+  service:
+    - name: testPolarisClient   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8084                         #naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+      protocol: http
+      serialization: json
+      idle_timeout: 86400000 # 单位为毫秒, 默认为 180000
+    - name: testPolarisTRPC   # 该name不用作北极星寻址
+      interface: com.tencent.trpc.demo.api.HelloAPI
+      naming_url: ip://127.0.0.1:8085                         #naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+      protocol: trpc
+      serialization: pb
+      idle_timeout: 86400000 # 单位为毫秒, 默认为 180000

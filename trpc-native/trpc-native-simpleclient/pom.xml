@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>trpc-native</artifactId>
+        <groupId>com.tencent.trpc.examples</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>trpc-native-simpleclient</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tencent.trpc.examples</groupId>
+            <artifactId>trpc-examples-stub</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tencent.trpc</groupId>
+            <artifactId>trpc-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tencent.trpc</groupId>
+            <artifactId>trpc-proto-http</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

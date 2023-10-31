@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>trpc-java-examples</artifactId>
+        <groupId>com.tencent.trpc.examples</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>trpc-selector</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>trpc-selector-open-polaris</module>
+        <module>trpc-selector-zookeeper</module>
+        <module>trpc-selector-open-polaris-client</module>
+        <module>trpc-selector-open-polaris-server</module>
+    </modules>
+
+</project>

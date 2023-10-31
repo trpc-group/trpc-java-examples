@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: helloworld
+  rainbow:
+    refreshScope: false
+server:
+  port: 8188
+trpc:
+  #全局配置
+  global:
+    namespace: Development  #环境类型，分正式环境和非正式环境两种类型
+    env_name: 0f9552d0   #环境名称，非正式环境下多环境的名称
+  client:
+    service:
+      - name: testHttpClient   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        #      naming_url: ip://127.0.0.1:8082
+        # 如果上线123，可启用下面的配置，并注释上面的配置
+        naming_url: polaris://trpc.test.helloworld.HelloPolaris                          #naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+        protocol: http
+        transporter: jetty
+        serialization: json
+      - name: testTrpcClient   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        #      naming_url: ip://127.0.0.1:8083
+        # 如果上线123，可启用下面的配置，并注释上面的配置
+        naming_url: polaris://trpc.test.helloworld.HelloPolarisTrpc                          #naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+        protocol: trpc
+        serialization: pb
+      - name: testSetRouter   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        naming_url: polaris://trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+        protocol: trpc
+        serialization: pb
+        naming_map: # 服务发现所需参数
+          metadata: # 元数据路由所需参数
+            internal-enable-set: Y
+            internal-set-name: set.homo.public
+      - name: testMetadataRouter   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        naming_url: polaris://trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+        protocol: trpc
+        serialization: pb
+        naming_map: # 服务发现所需参数
+          metadata: # 元数据路由所需参数
+            env: ${env_name} # 0f9552d0
+      - name: testCanaryRouter   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        naming_url: polaris://trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+        protocol: trpc
+        serialization: pb
+        naming_map: # 服务发现所需参数
+          metadata: # 元数据路由所需参数
+            internal-canary: true
+            canary: 1
+      - name: testRuleRouter   # 该name不用作北极星寻址
+        interface: com.tencent.trpc.demo.api.HelloAPI
+        naming_url: polaris://trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+        protocol: trpc
+        serialization: pb
+        caller_service_name: trpc.trpc_java.trpc_java_demo.TestPolarisTRPC
+        request_timeout: 10000
+  plugins:
+    selector:
+      polaris:
+        enable_trans_meta: true  # 使用规则路由时必须配置
+        mode: 0
+        # 以下的配置与polaris java sdk配置一致。
+        global:
+          system:
+            discoverCluster:
+              sameAsBuiltin: true
+            healthCheckCluster:
+              sameAsBuiltin: true
+          serverConnector:
+            # target server address
+            addresses:
+              - 127.0.0.1:8091
+          statReporter:
+            enable: true
+            plugin:
+              prometheus:
+                port: 28083

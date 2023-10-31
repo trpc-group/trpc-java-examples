@@ -1,0 +1,9 @@
+#服务端配置
+server:
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  # 暴露服务service 配置
+  service: #业务服务提供的service，可以有多个
+    - name: Hello   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.gatewayserver.HelloServiceImpl   #暴露的service协议接口实现类
+      port: 8090 #trpc 服务 port

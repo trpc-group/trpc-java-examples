@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: trpc-java-demos-coroutine
+  rainbow:
+    refreshScope: false
+server:
+  port: 8088

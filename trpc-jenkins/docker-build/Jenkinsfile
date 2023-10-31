@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    environment {
+        GIT_CREDENTIALS_ID = 'git-ssh-credential' // Jenkins中配置的git秘钥ID
+        MAVEN_INSTALLATION_NAME = 'maven' // Jenkins中配置的Maven installation名称
+        GIT_URL = "${gitlabSourceRepoURL}" // git url，demo使用了gitlab webhook注入的环境变量，使用其他git(github/bitbucket等)时请修改为对应的变量
+        GIT_BRANCH = "${gitlabBranch}" // git branch，demo使用了gitlab webhook注入的环境变量，使用其他git(github/bitbucket等)时请修改为对应的变量
+        DOCKERFILE = 'Dockerfile' // Dockerfile path
+        IMAGE = 'trpc-demo/trpc-docker-demo' // 镜像名称
+        DOCKER_REGISTRY = 'mirrors.tencent.com' // 镜像推送的docker registry
+        DOCKER_CREDENTIALS_ID = 'docker-registry-credential' // Jenkins中配置的docker registry用户名/密码
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: env.GIT_CREDENTIALS_ID, poll: false, url: env.GIT_URL, branch: env.GIT_BRANCH
+            }
+        }
+        stage('Test') {
+            steps {
+                withMaven(maven: env.MAVEN_INSTALLATION_NAME) {
+                    sh "mvn clean test"
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                withMaven(maven: env.MAVEN_INSTALLATION_NAME) {
+                    sh "mvn package"
+                }
+            }
+        }
+        stage('Docker build') {
+            steps {
+                script {
+                    def tag = ''
+                    if (env.gitlabActionType == "PUSH") { // push触发时，使用branch名作为镜像tag
+                        tag = env.GIT_BRANCH.replaceAll('/', '_')
+                    } else if (env.gitlabActionType == "TAG_PUSH") { // git tag触发时，使用tag名作为镜像tag
+                        tag = env.GIT_BRANCH.substring(10).replaceAll('/', '_')
+                    } else {
+                        error 'invalid gitlabActionType:' + env.gitlabActionType
+                    }
+                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE}:" + tag + " -f ${DOCKERFILE} ."
+                    withCredentials([usernamePassword(credentialsId: 'docker-registry-credential', usernameVariable: 'username', passwordVariable: 'password')]) {
+                        sh 'docker login --username $username --password $password $DOCKER_REGISTRY'
+                        sh "docker push ${DOCKER_REGISTRY}/${IMAGE}:" + tag
+                    }
+                }
+            }
+        }
+    }
+}

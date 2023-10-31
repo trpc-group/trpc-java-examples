@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Properties>
+        <Property name="logdir">/Users/$${env:USER}/trpc/log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8"
+                           pattern="%highlight{%d [%thread] [%-5p]%c{1}(%L) %m%n}{FATAL=Bright Red, ERROR=Bright Magenta, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White}"/>
+        </Console>
+        <RollingRandomAccessFile name="DebugLog" append="true" fileName="${logdir}/debug.log"
+                                 filePattern="${logdir}/debug.%d{yyyy-MM-dd}.log">
+            <Filters>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout charset="UTF-8">
+                <Pattern>%d [%-5p]%C{1}(%L) %m%n</Pattern>
+            </PatternLayout>
+            <TimeBasedTriggeringPolicy/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="ErrorLog" append="true" fileName="${logdir}/error.log"
+                                 filePattern="${logdir}/error.log.%i">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="UTF-8">
+                <Pattern>%d [%-5p]%C{1}(%L) %m%n</Pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="200MB"/>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <loggers>
+        <AsyncRoot level="ERROR" includeLocation="true">
+            <AppenderRef ref="DebugLog"/>
+            <AppenderRef ref="ErrorLog"/>
+        </AsyncRoot>
+        <Logger name="com.tencent" level="INFO" includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.tencent.trpc.transport" level="ERROR" includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.springframework" level="ERROR" includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </loggers>
+</Configuration>

@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    environment {
+        GIT_CREDENTIALS_ID = 'git-ssh-credential' // Jenkins中配置的git秘钥ID
+        MAVEN_INSTALLATION_NAME = 'maven' // Jenkins中配置的Maven installation名称
+        GIT_URL = "${gitlabSourceRepoURL}" // git url，demo使用了gitlab webhook注入的环境变量，使用其他git(github/bitbucket等)时请修改为对应的变量
+        GIT_BRANCH = "${gitlabBranch}" // git branch，demo使用了gitlab webhook注入的环境变量，使用其他git(github/bitbucket等)时请修改为对应的变量
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: env.GIT_CREDENTIALS_ID, poll: false, url: env.GIT_URL, branch: env.GIT_BRANCH
+            }
+        }
+        stage('Test') {
+            steps {
+                withMaven(maven: env.MAVEN_INSTALLATION_NAME) {
+                    sh "mvn clean test"
+                }
+            }
+        }
+        stage('Build & Archive') {
+            steps {
+                withMaven(maven: env.MAVEN_INSTALLATION_NAME) {
+                    sh "mvn package"
+                }
+            }
+        }
+    }
+}

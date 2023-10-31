@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    environment {
+        KUBECONFIG_ID = 'k8s_kubeconfig' // Jenkins中配置的kubeconfig秘钥ID
+        DEPLOYMENT_NAME = 'trpc-demo' // k8s deployment名称
+        CONTAINER_NAME = 'java' // k8s container名称
+        IMAGE ='mirrors.tencent.com/trpc-demo/trpc-docker-demo' // 使用的docker image
+    }
+    parameters {
+        // 要更新镜像到的目标tag
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'image tag')
+    }
+    stages {
+        // 准备阶段：准备kubectl
+        stage('Prepare') {
+            steps {
+                sh '''
+                if [ ! -e ~/kubectl ]
+                then
+                    curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl
+                    mv kubectl ~/kubectl
+                    chmod +x ~/kubectl
+                fi
+                '''
+            }
+        }
+        // 部署阶段：使用kubectl set image命令更新镜像版本
+        stage('Deploy') {
+            steps {
+                withKubeConfig(credentialsId: env.KUBECONFIG_ID) {
+                    sh "~/kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE}:${params.IMAGE_TAG}"
+                }
+            }
+        }
+    }
+}

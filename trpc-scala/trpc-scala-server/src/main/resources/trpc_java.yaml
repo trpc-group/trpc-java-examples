@@ -1,0 +1,24 @@
+global:
+  namespace: Development # 环境类型，分正式环境和非正式环境两种类型
+#服务端配置
+server:
+  app: trpc_java # 业务的应用名
+  server: trpc_java_demo # 业务的服务名
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  jvm_params: -Xms1024m -Xmx1024m -Xmn512m
+  # 暴露服务service 配置
+  service: #业务服务提供的service，可以有多个
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisHttp  #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.scala.service.HelloServiceImpl   #暴露的service协议接口实现类
+      port: 9901
+      protocol: http
+      transporter: jetty
+      serialization: json
+    - name: trpc.trpc_java.trpc_java_demo.TestPolarisTrpc
+      impls:
+        - com.tencent.trpc.demo.scala.service.HelloServiceImpl
+      port: 9902
+      protocol: trpc
+      transporter: netty
+      serialization: pb

@@ -1,0 +1,80 @@
+#客户端配置
+client:
+  #访问trpc服务配置
+  service:
+    - name: helloA # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8090 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloA # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8090
+    - name: helloB # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8091 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloB # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8091
+    - name: helloC # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8092 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloC # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8092
+    - name: helloD # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8093 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloD # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8093
+    - name: helloE # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8094 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloE # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8094
+    - name: helloF # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8095 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloF # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8095
+    - name: helloG # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8096 # 名字服务配置，用于名字服务寻址，此处是 ip 直连,naming配置,直连 ip://ip:port, 名字服务: polaris://trpc.TestApp.TestServer.Greeter?key=value&key=value  l5://mid:cmid  cmlb://id
+    - name: asyncHelloG # 用于通过TRpcProxy查找
+      interface: com.tencent.trpc.demo.api.HelloAsyncAPI # 具体的 trpc 客户端接口
+      naming_url: ip://127.0.0.1:8096
+
+#服务端配置
+server:
+  local_ip: 127.0.0.1   #本地IP，容器内为容器ip，物理机或虚拟机为本机ip
+  # 暴露服务service 配置
+  service: #业务服务提供的service，可以有多个
+    - name: HelloA   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplA   #暴露的service协议接口实现类
+      port: 8090 #trpc 服务 port
+    - name: HelloB   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplB   #暴露的service协议接口实现类
+      port: 8091 #trpc 服务 port
+    - name: HelloC   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplC   #暴露的service协议接口实现类
+      port: 8092 #trpc 服务 port
+    - name: HelloD   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplD   #暴露的service协议接口实现类
+      port: 8093 #trpc 服务 port
+    - name: HelloE   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplE   #暴露的service协议接口实现类
+      port: 8094 #trpc 服务 port
+    - name: HelloF   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplF   #暴露的service协议接口实现类
+      port: 8095 #trpc 服务 port
+    - name: HelloG   #名字服务配置，用于名字服务寻址，默认使用 tcp 网络连接协议， trpc 通信协议
+      impls: #需要暴露到名字服务上的接口，共享 name 和 port
+        - com.tencent.trpc.demo.chain.HelloServiceImplG   #暴露的service协议接口实现类
+      port: 8096 #trpc 服务 port

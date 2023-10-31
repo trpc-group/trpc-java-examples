@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: helloworld
+  rainbow:
+    refreshScope: false
+server:
+  port: 8191
+# 配置了protocol: rest,将不再使用server.port端口作为springboot启动端口，使用trpc-java springmvc http接口作为启动端口
