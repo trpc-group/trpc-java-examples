@@ -10,10 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>trpc-selector</module>
-        <module>trpc-examples-stub</module>
-        <module>trpc-examples-chain</module>
-        <module>trpc-examples-coroutine</module>
-        <module>trpc-examples-gateway</module>
+        <module>trpc-stub</module>
+        <module>trpc-chain</module>
+        <module>trpc-coroutine</module>
+        <module>trpc-gateway</module>
         <module>trpc-native</module>
         <module>trpc-spring</module>
         <module>trpc-limiter</module>

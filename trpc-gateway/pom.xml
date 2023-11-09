@@ -10,10 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
-    <artifactId>trpc-examples-gateway</artifactId>
+    <artifactId>trpc-gateway</artifactId>
     <modules>
-        <module>trpc-examples-gateway-client</module>
-        <module>trpc-examples-gateway-server</module>
+        <module>trpc-gateway-client</module>
+        <module>trpc-gateway-server</module>
     </modules>
 
 </project>

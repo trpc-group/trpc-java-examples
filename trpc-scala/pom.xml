@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>com.tencent.trpc.examples</groupId>
-            <artifactId>trpc-examples-stub</artifactId>
+            <artifactId>trpc-stub</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
