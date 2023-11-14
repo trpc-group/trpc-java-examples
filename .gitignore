@@ -16,3 +16,4 @@ trpc-selector/trpc-selector-open-polaris-server/log
 trpc-selector/trpc-selector-open-polaris-server/polaris
 trpc-limiter/trpc-limiter-polaris/log
 trpc-limiter/trpc-limiter-polaris/polaris
+**/log

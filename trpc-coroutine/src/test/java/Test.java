@@ -17,15 +17,17 @@ public class Test {
         Class<?> thread = ReflectionUtils.forName("java.lang.Thread");
         Method ofVirtualMethod = thread.getDeclaredMethod("ofVirtual");
         Object virtual = ofVirtualMethod.invoke(thread);
-        Class<?> virtualClazz = virtual.getClass();
+        Class<?> virtualClazz = ofVirtualMethod.getReturnType();
         Method nameMethod = virtualClazz.getMethod("name", String.class, long.class);
-        nameMethod.setAccessible(true);
         nameMethod.invoke(virtual, "test", 1);
-        Method schedulerMethod = virtualClazz.getDeclaredMethod("scheduler", Executor.class);
-        schedulerMethod.setAccessible(true);
-        schedulerMethod.invoke(virtual, Executors.newWorkStealingPool(2));
-        Method factoryMethod = virtualClazz.getDeclaredMethod("factory");
-        factoryMethod.setAccessible(true);
+        try {
+            Method schedulerMethod = virtualClazz.getDeclaredMethod("scheduler", Executor.class);
+            schedulerMethod.setAccessible(true);
+            schedulerMethod.invoke(virtual, Executors.newWorkStealingPool(2));
+        } catch (NoSuchMethodException exception) {
+            System.out.println(exception);
+        }
+        Method factoryMethod = virtualClazz.getMethod("factory");
         ThreadFactory threadFactory = (ThreadFactory) factoryMethod.invoke(virtual);
         ExecutorService threadPool = new ThreadPoolExecutor(2,
                 2, 10,
