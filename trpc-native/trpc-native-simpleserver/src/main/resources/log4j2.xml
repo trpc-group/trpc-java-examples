@@ -34,7 +34,7 @@
             <AppenderRef ref="DebugLog"/>
             <AppenderRef ref="ErrorLog"/>
         </AsyncRoot>
-        <Logger name="com.tencent" level="WARN" includeLocation="true">
+        <Logger name="com.tencent" level="INFO" includeLocation="true">
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="com.tencent.trpc.transport" level="ERROR" includeLocation="true">
