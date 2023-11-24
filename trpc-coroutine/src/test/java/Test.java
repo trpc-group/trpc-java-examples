@@ -20,12 +20,10 @@ public class Test {
         Class<?> virtualClazz = ofVirtualMethod.getReturnType();
         Method nameMethod = virtualClazz.getMethod("name", String.class, long.class);
         nameMethod.invoke(virtual, "test", 1);
-        try {
+        if (containsMethod(virtualClazz.getDeclaredMethods(), "scheduler")) {
             Method schedulerMethod = virtualClazz.getDeclaredMethod("scheduler", Executor.class);
             schedulerMethod.setAccessible(true);
             schedulerMethod.invoke(virtual, Executors.newWorkStealingPool(2));
-        } catch (NoSuchMethodException exception) {
-            System.out.println(exception);
         }
         Method factoryMethod = virtualClazz.getMethod("factory");
         ThreadFactory threadFactory = (ThreadFactory) factoryMethod.invoke(virtual);
@@ -41,6 +39,15 @@ public class Test {
             System.out.println("testCreateThreadFactory");
         });
         threadPool.awaitTermination(2, TimeUnit.SECONDS);
+    }
+
+    private boolean containsMethod(Method[] methods, String name) {
+        for (Method method : methods) {
+            if (method.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
