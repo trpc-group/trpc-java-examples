@@ -23,7 +23,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <trpc.version>1.1.0-SNAPSHOT</trpc.version>
+        <trpc.version>1.2.0-SNAPSHOT</trpc.version>
         <springboot.version>2.7.12</springboot.version>
         <maven.deploy.version>3.0.0</maven.deploy.version>
         <lombok.version>1.18.28</lombok.version>
