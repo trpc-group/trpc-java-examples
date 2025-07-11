@@ -1,7 +1,7 @@
 /*
  * Tencent is pleased to support the open source community by making tRPC available.
  *
- * Copyright (C) 2023 THL A29 Limited, a Tencent company. 
+ * Copyright (C) 2023 Tencent.
  * All rights reserved.
  *
  * If you have downloaded a copy of the tRPC source code from Tencent,
@@ -51,7 +51,6 @@ public class AsyncChainClientDemo {
 
     private static HelloAsyncAPI asyncHelloE;
     private static Hello.HelloReq requestE;
-
 
 
     public static void main(String[] args) throws Exception {

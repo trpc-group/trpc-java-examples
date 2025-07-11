@@ -25,6 +25,7 @@ server:
       protocol: trpc
       transporter: netty
       serialization: pb
+      request_timeout: 100000000
       # trpc-cli -verbose -func /trpc.test.demo.Hello/SayHello -target ip://127.0.0.1:8085 -protocol trpc -body '{"msg":"hello,trpc-cli"}'
     - name: trpc.trpc_java.trpc_java_demo.Async
       impls:
@@ -49,3 +50,4 @@ client:
       protocol: trpc
       serialization: pb
       idle_timeout: 86400000 # 单位为毫秒, 默认为 180000
+      request_timeout: 100000000
