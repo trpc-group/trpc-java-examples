@@ -1,7 +1,7 @@
 /*
  * Tencent is pleased to support the open source community by making tRPC available.
  *
- * Copyright (C) 2023 THL A29 Limited, a Tencent company. 
+ * Copyright (C) 2023 Tencent.
  * All rights reserved.
  *
  * If you have downloaded a copy of the tRPC source code from Tencent,
@@ -11,6 +11,10 @@
 
 package com.tencent.trpc.demo.polaris;
 
+import com.tencent.trpc.core.rpc.RpcClientContext;
+import com.tencent.trpc.core.rpc.TRpcProxy;
+import com.tencent.trpc.demo.api.Hello.HelloReq;
+import com.tencent.trpc.demo.api.HelloAPI;
 import com.tencent.trpc.spring.boot.starters.annotation.EnableTRpc;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,5 +32,10 @@ public class TrpcServerApplication {
                 .sources(TrpcServerApplication.class)
                 .web(WebApplicationType.SERVLET)
                 .run(args);
+
+        HelloAPI proxy = TRpcProxy.getProxy("testPolarisTRPC", HelloAPI.class);
+        String ret = proxy.sayHello(new RpcClientContext(),
+                HelloReq.newBuilder().setMsg("hello").build()).getMsg();
+        System.out.println(ret);
     }
 }

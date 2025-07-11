@@ -1,7 +1,7 @@
 /*
  * Tencent is pleased to support the open source community by making tRPC available.
  *
- * Copyright (C) 2023 THL A29 Limited, a Tencent company. 
+ * Copyright (C) 2023 Tencent.
  * All rights reserved.
  *
  * If you have downloaded a copy of the tRPC source code from Tencent,
@@ -274,12 +274,12 @@ public final class Hello {
         @Override
         public final boolean isInitialized() {
             byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) {
-            return true;
-          }
-          if (isInitialized == 0) {
-            return false;
-          }
+            if (isInitialized == 1) {
+                return true;
+            }
+            if (isInitialized == 0) {
+                return false;
+            }
 
             memoizedIsInitialized = 1;
             return true;
@@ -303,9 +303,9 @@ public final class Hello {
         @Override
         public int getSerializedSize() {
             int size = memoizedSize;
-          if (size != -1) {
-            return size;
-          }
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (!getMsgBytes().isEmpty()) {
@@ -333,21 +333,21 @@ public final class Hello {
             }
             HelloReq other = (HelloReq) obj;
 
-          if (!getMsg()
-                  .equals(other.getMsg())) {
-            return false;
-          }
-          if (!getId()
-                  .equals(other.getId())) {
-            return false;
-          }
-          if (getCost()
-                  != other.getCost()) {
-            return false;
-          }
-          if (!unknownFields.equals(other.unknownFields)) {
-            return false;
-          }
+            if (!getMsg()
+                    .equals(other.getMsg())) {
+                return false;
+            }
+            if (!getId()
+                    .equals(other.getId())) {
+                return false;
+            }
+            if (getCost()
+                    != other.getCost()) {
+                return false;
+            }
+            if (!unknownFields.equals(other.unknownFields)) {
+                return false;
+            }
             return true;
         }
 
@@ -605,9 +605,9 @@ public final class Hello {
             }
 
             public Builder mergeFrom(HelloReq other) {
-              if (other == HelloReq.getDefaultInstance()) {
-                return this;
-              }
+                if (other == HelloReq.getDefaultInstance()) {
+                    return this;
+                }
                 if (!other.getMsg().isEmpty()) {
                     msg_ = other.msg_;
                     onChanged();
@@ -1130,12 +1130,12 @@ public final class Hello {
         @Override
         public final boolean isInitialized() {
             byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) {
-            return true;
-          }
-          if (isInitialized == 0) {
-            return false;
-          }
+            if (isInitialized == 1) {
+                return true;
+            }
+            if (isInitialized == 0) {
+                return false;
+            }
 
             memoizedIsInitialized = 1;
             return true;
@@ -1156,9 +1156,9 @@ public final class Hello {
         @Override
         public int getSerializedSize() {
             int size = memoizedSize;
-          if (size != -1) {
-            return size;
-          }
+            if (size != -1) {
+                return size;
+            }
 
             size = 0;
             if (!getMsgBytes().isEmpty()) {
@@ -1182,17 +1182,17 @@ public final class Hello {
             }
             HelloRsp other = (HelloRsp) obj;
 
-          if (!getMsg()
-                  .equals(other.getMsg())) {
-            return false;
-          }
-          if (!getId()
-                  .equals(other.getId())) {
-            return false;
-          }
-          if (!unknownFields.equals(other.unknownFields)) {
-            return false;
-          }
+            if (!getMsg()
+                    .equals(other.getMsg())) {
+                return false;
+            }
+            if (!getId()
+                    .equals(other.getId())) {
+                return false;
+            }
+            if (!unknownFields.equals(other.unknownFields)) {
+                return false;
+            }
             return true;
         }
 
@@ -1445,9 +1445,9 @@ public final class Hello {
             }
 
             public Builder mergeFrom(HelloRsp other) {
-              if (other == HelloRsp.getDefaultInstance()) {
-                return this;
-              }
+                if (other == HelloRsp.getDefaultInstance()) {
+                    return this;
+                }
                 if (!other.getMsg().isEmpty()) {
                     msg_ = other.msg_;
                     onChanged();
